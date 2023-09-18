@@ -3,8 +3,10 @@ package final_project_todolist;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Menu {
 
@@ -15,35 +17,43 @@ public class Menu {
 	public void viewMenu() {
 		int choice;
 		
-		do {
-			System.out.println("**** TO DO LIST ****");
-			System.out.println("1. Add Task");
-			System.out.println("2. View List");
-			System.out.println("3. Run Task");
-			System.out.println("4. Exit");
-			System.out.println("Select an option: ");
-			choice = scanner.nextInt();
-			
-			switch(choice) {
-			case 1: 
-				addTask(); // functions
-				break;
-				
-			case 2: 
-				viewList();
-				break;
-				
-			case 3: 
-				runTask();
-				break;
-				
-			case 4:
-				System.out.println("Exit");
-				break;
-			default:
-					System.out.println("Try again!");
-			}
-		}while(choice !=4); // If the option 4 is chosen the while loop pause (Exit). 
+		    do {
+		        try {
+		            System.out.println("**** TO DO LIST ****");
+		            System.out.println("1. Add Task");
+		            System.out.println("2. View List");
+		            System.out.println("3. Run Task");
+		            System.out.println("4. Exit");
+		            System.out.print("Select an option: ");
+
+		            choice = scanner.nextInt();
+
+		            switch (choice) {
+		                case 1:
+		                    addTask();
+		                    break;
+
+		                case 2:
+		                    viewList();
+		                    break;
+
+		                case 3:
+		                    runTask();
+		                    break;
+
+		                case 4:
+		                    System.out.println("Exit");
+		                    break;
+
+		                default:
+		                    System.out.println("Invalid choice. Please try again.");
+		            }
+		        } catch (InputMismatchException e) {
+		            System.out.println("Invalid");
+		            scanner.next(); // Clean the scanner
+		            choice = -1; // Restart the loop
+		        }
+		    } while (choice != 4); // If the option 4 is chosen the while loop pause (Exit). 
 	}
 	
 	private void addTask() {
@@ -85,17 +95,50 @@ public class Menu {
 	
 	private void viewList() {
 		System.out.println("**** TO DO LIST ****");
-		
-		for(int i =0; i < tasks.size(); i++) { // size() it is like the .length in javascript.
-			Task task = tasks.get(i); // It will print the task added according to its index.
-			System.out.println((i+1) + ". " + task.getTitle() + " - " + task.getDescription());
-			
-			// The deadline should be also printed.
-			if(task instanceof DeadlineTask) { // It return true if task is a type of Deadline;
-				DeadlineTask deadlinetask = (DeadlineTask) task; // the task that will be put in this variable should be only the deadline type.
-				System.out.println("Deadline: " + new SimpleDateFormat("dd/MM/yyyy").format(deadlinetask.getDeadline())); // The format(date object) is a method of SimpleDate that says what it should format.
-			};
-		};
+		    System.out.println("1. View Tasks with Deadlines");
+		    System.out.println("2. View Tasks without Deadlines");
+		    System.out.println("3. View All Tasks");
+		    System.out.println("Select an option: ");
+
+		    int choice = scanner.nextInt();
+		    List<Task> selectedTasks;  // The tasks will be inputed in this new list according to the choice made.
+
+		    switch (choice) {
+		        case 1:
+		            // Filter tasks with deadlines
+		            selectedTasks = tasks.stream()
+		                    .filter(task -> task instanceof DeadlineTask)  // If the task has deadline is inputed in the array.
+		                    .collect(Collectors.toList());
+		            break;
+
+		        case 2:
+		            // Filter tasks without deadlines
+		            selectedTasks = tasks.stream()
+		                    .filter(task -> !(task instanceof DeadlineTask))
+		                    .collect(Collectors.toList());
+		            break;
+
+		        case 3:
+		            // View all tasks
+		            selectedTasks = tasks;
+		            break;
+
+		        default:
+		            System.out.println("Invalid option.");
+		            return;
+		    }
+
+		    // Display selected tasks
+		    for (int i = 0; i < selectedTasks.size(); i++) { // size() it is like the .length in javascript.
+		        Task task = selectedTasks.get(i); // It will print the task added according to its index.
+		        System.out.println((i + 1) + ". " + task.getTitle() + " - " + task.getDescription());
+
+		     // The deadline should be also printed.
+		        if (task instanceof DeadlineTask) { // It return true if task is a type of Deadline;
+		            DeadlineTask deadlineTask = (DeadlineTask) task; // the task that will be put in this variable should be only the deadline type.
+		            System.out.println("Deadline: " + new SimpleDateFormat("dd/MM/yyyy").format(deadlineTask.getDeadline())); // The format(date object) is a method of SimpleDate that says what should formatted.
+		        }
+		    }
 	}
 	
 	private void runTask() {
@@ -105,7 +148,7 @@ public class Menu {
         
         if(taskNumber >= 1 && taskNumber <= tasks.size()) {
         	Task task = tasks.get(taskNumber - 1); // This -1 is to get the index and not the task number.
-        	task.view();
+        	task.view(); 
         }else {
         	System.out.print("Invalid task number");
         }

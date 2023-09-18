@@ -21,6 +21,7 @@ public abstract class Task {
 		return description;
 	};
 	
+	
 	// Why to apply only the getters here? 
 	// Answer: Control Over Modifications: By not providing setters, you have control over how the title and description are set. You might want to enforce certain rules or validations when setting these values, which can be done within the constructor.
 }
