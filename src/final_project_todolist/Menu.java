@@ -138,15 +138,18 @@ public class Menu {
 	
 	private void runTask() {
 		viewList();
-		System.out.print("Type the task number to perform: ");
-        int taskNumber = scanner.nextInt();
-        
-        if(taskNumber >= 1 && taskNumber <= tasks.size()) {
-        	Task task = tasks.get(taskNumber - 1); 
-        	task.view(); 
-        }else {
-        	System.out.print("Invalid task number");
-        }
+		while(true) {
+			System.out.print("\nType the task number to perform: ");
+	        int taskNumber = scanner.nextInt();
+	        
+	        if(taskNumber >= 1 && taskNumber <= tasks.size()) {
+	        	Task task = tasks.get(taskNumber - 1);  
+	        	task.view(); 
+	        	break;
+	        }else {
+	        	System.out.print("\nInvalid task number");
+	        }	
+		}
 	}
 	
     public static void main(String[] args) { 
