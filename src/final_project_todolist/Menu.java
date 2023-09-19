@@ -66,16 +66,20 @@ public class Menu {
 		String answer = scanner.nextLine();
 		
 		if(answer.equalsIgnoreCase("Y")) { 
-			System.out.println("Type the deadline (dd/MM/yyyy): "); 
-			String dateInput = scanner.next();
-			
-			try {
-				Date deadline = new SimpleDateFormat("dd/MM/yyyy").parse(dateInput);
-				DeadlineTask task = new DeadlineTask(title, description, deadline);
-				tasks.add(task); 
-				System.out.println("Task with deadline has been added successfully!");
-			}catch(Exception e) {
-				System.out.println("Invalid");
+			while(true) {
+				try {
+					System.out.println("Type the deadline (dd/MM/yyyy): "); 
+					String dateInput = scanner.next();
+					
+					Date deadline = new SimpleDateFormat("dd/MM/yyyy").parse(dateInput);
+					 
+					DeadlineTask task = new DeadlineTask(title, description, deadline);
+					tasks.add(task);  
+					System.out.println("Task with deadline has been added successfully!");
+					break;
+				}catch(Exception e) {
+					System.out.println("Invalid");
+				}
 			}
 		} else {
 			Task task = new Task(title, description) {
